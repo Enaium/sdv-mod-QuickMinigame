@@ -32,6 +32,9 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
+        <Reference Include="EnaiumToolKit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\EnaiumToolKit\bin\Release\EnaiumToolKit.dll</HintPath>
+        </Reference>
         <Reference Include="Microsoft.Build" />
         <Reference Include="Microsoft.Build.Framework" />
         <Reference Include="Microsoft.Build.Utilities.v4.0" />
@@ -43,11 +46,15 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Framework\Config.cs" />
+        <Compile Include="Framework\Gui\QuickMinigameScreen.cs" />
         <Compile Include="ModEntry.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
       <Content Include=".gitignore" />
+      <Content Include="i18n\default.json" />
+      <Content Include="i18n\zh.json" />
       <Content Include="LICENSE" />
       <Content Include="manifest.json" />
       <Content Include="README.md" />
