@@ -2,7 +2,7 @@
   "Name": "QuickMinigame",
   "Author": "Enaium",
   "Version": "1.0.0",
-  "Description": "Open minigame quickly",
+  "Description": "Play minigame quickly",
   "UniqueID": "Enaium.QuickMinigame",
   "EntryDll": "QuickMinigame.dll",
   "MinimumApiVersion": "3.7.0",
