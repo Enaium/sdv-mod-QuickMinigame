@@ -9,42 +9,80 @@ namespace QuickMinigame.Framework.Gui
     {
         public QuickMinigameScreen()
         {
+            var gameLocation = Game1.game1.instanceGameLocation;
+            var buttonTitle = GetTranslation("quickMinigame.button");
+            AddElement(new Button($"{buttonTitle} {GetTranslation("quickMinigame.button.darts")}",
+                $"{buttonTitle} {GetTranslation("quickMinigame.button.darts")}")
+            {
+                OnLeftClicked = () => { Game1.currentMinigame = new Darts(); }
+            });
+            
             AddElement(new Button(
-                $"{GetTranslation("quickMinigame.button")} {GetTranslation("quickMinigame.button.slots")}",
-                $"{GetTranslation("quickMinigame.button")} {GetTranslation("quickMinigame.button.slots")}")
+                $"{buttonTitle} {GetTranslation("quickMinigame.button.slots")}",
+                $"{buttonTitle} {GetTranslation("quickMinigame.button.slots")}")
             {
                 OnLeftClicked = () => { Game1.currentMinigame = new Slots(); }
             });
             AddElement(new Button(
-                $"{GetTranslation("quickMinigame.button")} {GetTranslation("quickMinigame.button.prairieKing")}",
-                $"{GetTranslation("quickMinigame.button")} {GetTranslation("quickMinigame.button.prairieKing")}")
+                $"{buttonTitle} {GetTranslation("quickMinigame.button.prairieKing")}",
+                $"{buttonTitle} {GetTranslation("quickMinigame.button.prairieKing")}")
             {
-                OnLeftClicked = () => { Game1.currentMinigame = new AbigailGame(); }
+                OnLeftClicked = () =>
+                {
+                    gameLocation.showPrairieKingMenu();
+                }
             });
             AddElement(new Button(
-                $"{GetTranslation("quickMinigame.button")} {GetTranslation("quickMinigame.button.calicoJack")}",
-                $"{GetTranslation("quickMinigame.button")} {GetTranslation("quickMinigame.button.calicoJack")}")
+                $"{buttonTitle} {GetTranslation("quickMinigame.button.calicoJack")}",
+                $"{buttonTitle} {GetTranslation("quickMinigame.button.calicoJack")}")
             {
                 OnLeftClicked = () => { Game1.currentMinigame = new CalicoJack(); }
             });
             AddElement(new Button(
-                $"{GetTranslation("quickMinigame.button")} {GetTranslation("quickMinigame.button.craneGame")}",
-                $"{GetTranslation("quickMinigame.button")} {GetTranslation("quickMinigame.button.craneGame")}")
+                $"{buttonTitle} {GetTranslation("quickMinigame.button.craneGame")}",
+                $"{buttonTitle} {GetTranslation("quickMinigame.button.craneGame")}")
             {
-                OnLeftClicked = () => { Game1.currentMinigame = new CraneGame(); }
+                OnLeftClicked = () =>
+                {
+                    gameLocation.createQuestionDialogue(
+                        Game1.content.LoadString("Strings\\StringsFromMaps:MovieTheater_CranePlay", 500),
+                        gameLocation.createYesNoResponses(), TryToStartCraneGame);
+                }
             });
             AddElement(new Button(
-                $"{GetTranslation("quickMinigame.button")} {GetTranslation("quickMinigame.button.minecartProgressMode")}",
-                $"{GetTranslation("quickMinigame.button")} {GetTranslation("quickMinigame.button.minecartProgressMode")}")
+                $"{buttonTitle} {GetTranslation("quickMinigame.button.minecart")}",
+                $"{buttonTitle} {GetTranslation("quickMinigame.button.minecart")}")
             {
-                OnLeftClicked = () => { Game1.currentMinigame = new MineCart(0, 3); }
+                OnLeftClicked = () =>
+                {
+                    var answerChoices = new[]
+                    {
+                        new Response("Progress",
+                            Game1.content.LoadString("Strings\\Locations:Saloon_Arcade_Minecart_ProgressMode")),
+                        new Response("Endless",
+                            Game1.content.LoadString("Strings\\Locations:Saloon_Arcade_Minecart_EndlessMode")),
+                        new Response("Exit", Game1.content.LoadString("Strings\\Locations:Saloon_Arcade_Minecart_Exit"))
+                    };
+                    gameLocation.createQuestionDialogue(
+                        Game1.content.LoadString("Strings\\Locations:Saloon_Arcade_Minecart_Menu"), answerChoices,
+                        "MinecartGame");
+                }
             });
-            AddElement(new Button(
-                $"{GetTranslation("quickMinigame.button")} {GetTranslation("quickMinigame.button.minecartEndlessMode")}",
-                $"{GetTranslation("quickMinigame.button")} {GetTranslation("quickMinigame.button.minecartEndlessMode")}")
+        }
+
+        private void TryToStartCraneGame(Farmer who, string whichAnswer)
+        {
+            if (whichAnswer.ToLower() != "yes")
+                return;
+            if (Game1.player.Money >= 500)
             {
-                OnLeftClicked = () => { Game1.currentMinigame = new MineCart(0, 2); }
-            });
+                Game1.player.Money -= 500;
+                Game1.changeMusicTrack("none", music_context: Game1.MusicContext.MiniGame);
+                Game1.globalFadeToBlack(() => Game1.currentMinigame = (IMinigame) new CraneGame(), 0.008f);
+            }
+            else
+                Game1.drawObjectDialogue(
+                    Game1.content.LoadString("Strings\\StringsFromCSFiles:PurchaseAnimalsMenu.cs.11325"));
         }
 
         private string GetTranslation(string key)
